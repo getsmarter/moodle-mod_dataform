@@ -22,5 +22,5 @@
  */
 
 $plugin->component = 'dataformview_tabular';
-$plugin->version = 2015051100;
-$plugin->requires = 2015051100;
+$plugin->version = 2017051502;
+$plugin->requires = 2017051500;
