@@ -29,6 +29,15 @@ Feature: Add dataform entries
 
         And I am in dataform "Test file field" "Course 1" as "teacher1"
 
+        And the following dataform "views" exist:
+            | name      | type    | dataform  | default   | visible |
+            | View01    | aligned | dataform1 | 1         | 1       |
+
+        And I log in as "teacher1"
+        And I follow "Course 1"
+
+    @javascript
+    Scenario: Use required or noedit patterns
         # No rules no content
         And I follow "Add a new entry"
         And I press "Save"

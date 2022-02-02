@@ -48,12 +48,12 @@ Feature: Dataform max entries
         Then I see "Add a new entry"
 
         When I follow "Add a new entry"
-        And I set the field "field_1_-1" to "Teacher Entry 01"
+        And I set the field with xpath "//input[@class='Field_01']" to "Teacher Entry 01"
         And I press "Save"
         Then I see "Entry 01"
 
         When I follow "Add a new entry"
-        And I set the field "field_1_-1" to "Teacher Entry 02"
+        And I set the field with xpath "//input[@class='Field_01']" to "Teacher Entry 02"
         And I press "Save"
         Then I see "Teacher Entry 01"
         And I see "Teacher Entry 02"
@@ -70,7 +70,7 @@ Feature: Dataform max entries
         And I see "Entry 02"
 
         When I follow "Add a new entry"
-        And I set the field "field_1_-1" to "Student Entry 01"
+        And I set the field with xpath "//input[@class='Field_01']" to "Student Entry 01"
         And I press "Save"
         Then I see "Teacher Entry 01"
         And I see "Teacher Entry 02"
@@ -93,12 +93,12 @@ Feature: Dataform max entries
         Then I see "Add a new entry"
 
         When I follow "Add a new entry"
-        And I set the field "field_1_-1" to "Teacher Entry 03"
+        And I set the field with xpath "//input[@class='Field_01']" to "Teacher Entry 03"
         And I press "Save"
         Then I see "Entry 01"
 
         When I follow "Add a new entry"
-        And I set the field "field_1_-1" to "Teacher Entry 04"
+        And I set the field with xpath "//input[@class='Field_01']" to "Teacher Entry 04"
         And I press "Save"
         Then I see "Teacher Entry 01"
         And I see "Teacher Entry 02"
@@ -121,7 +121,7 @@ Feature: Dataform max entries
         And I see "Teacher Entry 04"
 
         When I follow "Add a new entry"
-        And I set the field "field_1_-1" to "Student Entry 02"
+        And I set the field with xpath "//input[@class='Field_01']" to "Student Entry 02"
         And I press "Save"
         Then I see "Teacher Entry 01"
         And I see "Teacher Entry 02"

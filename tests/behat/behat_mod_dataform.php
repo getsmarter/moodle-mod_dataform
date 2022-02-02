@@ -322,6 +322,19 @@ class behat_mod_dataform extends behat_base {
         $df->reset_user_data();
     }
 
+    /**
+     * Resets user data in the specified dataform.
+     * This is a backend step.
+     *
+     * @Given /^user data in dataform "(?P<dataform_idn_string>(?:[^"]|\\")*)" is reset$/
+     * @param string $idnumber
+     */
+    public function user_data_in_dataform_is_reset($idnumber) {
+        $dataformid = $this->get_dataform_id($idnumber);
+        $df = new \mod_dataform_dataform($dataformid);
+        $df->reset_user_data();
+    }
+
     /* ACTIVITY SETUP STEPS */
 
     /**
@@ -517,8 +530,10 @@ class behat_mod_dataform extends behat_base {
     public function view_in_dataform_has_the_following_view_template($viewname, $dataformid, PyStringNode $content) {
         $df = mod_dataform_dataform::instance($dataformid);
         $view = $df->view_manager->get_view_by_name($viewname);
-        $view->set_default_view_template((string) $content);
-        $view->update($view->data);
+        if ($view) {
+            $view->set_default_view_template((string) $content);
+            $view->update($view->data);
+        }
     }
 
     /**
@@ -533,7 +548,75 @@ class behat_mod_dataform extends behat_base {
     public function view_in_dataform_has_the_following_entry_template($viewname, $dataformid, PyStringNode $content) {
         $df = mod_dataform_dataform::instance($dataformid);
         $view = $df->view_manager->get_view_by_name($viewname);
-        $view->set_default_entry_template((string) $content);
+        if ($view) {
+            $view->set_default_entry_template((string) $content);
+            $view->update($view->data);
+        }
+    }
+
+    /**
+     * Updates the submission settings of the specified view.
+     *
+     * @Given /^view "(?P<viewname_string>(?:[^"]|\\")*)" in "(?P<dataform_string>(?:[^"]|\\")*)" has the following submission settings:$/
+     * @param string $viewname
+     * @param string $didnumber
+     * @param TableNode $data
+     */
+    public function view_in_has_the_following_submission_settings($viewname, $didnumber, TableNode $data) {
+        global $DB;
+
+        $data = (object) $data->getRowsHash();
+
+        // Get the dataform id.
+        if (!$dataformid = $DB->get_field('course_modules', 'instance', array('idnumber' => $didnumber))) {
+            throw new Exception('The specified dataform with idnumber "' . $idnumber . '" does not exist');
+        }
+
+        $df = new \mod_dataform_dataform($dataformid);
+
+        // Get the view.
+        if (!$view = $df->view_manager->get_view_by_name($viewname)) {
+            return;
+        }
+
+        // Collate submission settings.
+        $settings = array();
+        // Submission display.
+        if (!empty($data->submissiondisplay)) {
+            $settings['display'] = $data->submissiondisplay;
+        }
+        // Buttons.
+        $buttons = $view->get_submission_buttons();
+        foreach ($buttons as $name) {
+            $buttonenable = $name.'buttonenable';
+            if (!empty($data->$buttonenable)) {
+                $buttoncontent = $name.'button_label';
+                $settings[$name] = !empty($data->$buttoncontent) ? $data->$buttoncontent : null;
+            }
+        }
+
+        // Submission Redirect.
+        if (!empty($data->submissionredirect)) {
+            if ($redirectview = $df->view_manager->get_view_by_name($data->submissionredirect)) {
+                $settings['redirect'] = $redirectview->id;
+            }
+        }
+        // Submission timeout.
+        if (!empty($data->submissiontimeout)) {
+            $settings['timeout'] = $data->submissiontimeout;
+        }
+        // Submission message.
+        if (!empty($data->submissionmessage)) {
+            $settings['message'] = $data->submissionmessage;
+        }
+        // Display after submission.
+        if (!empty($data->submissiondisplayafter)) {
+            $settings['displayafter'] = 1;
+        }
+
+        $view->submission = $settings;
+
+        // Update the view.
         $view->update($view->data);
     }
 
