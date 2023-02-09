@@ -30,3 +30,8 @@ $plugin->release  = '3.3.2';
 $plugin->version = 2017051502;
 $plugin->requires = 2017051500;
 $plugin->maturity = MATURITY_STABLE;
+
+function test_code_climate_rules_can_i_trigger_a_bad_climate_reaction() {
+    $a_very_very_very_very_very_very_very_very_very_long_variable = 99;
+}
+
