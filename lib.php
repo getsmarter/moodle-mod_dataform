@@ -504,7 +504,7 @@ function dataform_reset_userdata($data) {
                     e.dataid = ?
             ";
 
-            $coursecontext = context_course::instance($this->course->id);
+            $coursecontext = context_course::instance($data->courseid);
             $skipped = array();
             $notenrolled = array();
             $entries = $DB->get_records_sql($sql, array($dataformid));
